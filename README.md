@@ -1,6 +1,8 @@
 # Chicken Run
 
-A 2D side-scrolling platformer built with [p5.js](https://p5js.org/) during my university studies while learning JavaScript. You play as a chicken collecting corn, dodging butchers, jumping canyons, and racing to the flagpole.
+![Chicken Run gameplay screenshot](assets/screenshot.png)
+
+A 2D side-scrolling platformer built with [p5.js](https://p5js.org/) during my university studies while learning JavaScript. You play as a chicken collecting corn, dodging butchers, jumping canyons, and racing to the flagpole. Playable on desktop (keyboard) and mobile (on-screen touch controls).
 
 ## Play it
 
