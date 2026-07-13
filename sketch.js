@@ -1156,6 +1156,7 @@ function stopSpeedBoost() {
 }
 
 function doRestart() {
+    stopFlying();
     lives = 3;
     isGameOver = false;
     levelComplete = false;
@@ -1172,6 +1173,7 @@ function setupTouchControls() {
         var el = document.getElementById(id);
         el.addEventListener('touchstart', function(e) { e.preventDefault(); onStart(); }, { passive: false });
         el.addEventListener('touchend', function(e) { e.preventDefault(); onEnd(); }, { passive: false });
+        el.addEventListener('touchcancel', function(e) { e.preventDefault(); onEnd(); }, { passive: false });
     }
 
     bindHold('btn-left', function() { isLeft = true; }, function() { isLeft = false; });
