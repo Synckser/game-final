@@ -1460,4 +1460,12 @@ function BossEnemy(x, y, range) {
         return false;
     };
 }
+
+// Mobile browsers block audio until a user gesture - unlock it on first touch
+document.addEventListener('touchstart', function unlockAudio() {
+    if (typeof getAudioContext === 'function' && getAudioContext().state !== 'running') {
+        getAudioContext().resume();
+    }
+}, { once: true });
+
 //Coding By Roberto Pires Almeida ends here.
