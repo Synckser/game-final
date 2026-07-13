@@ -1114,37 +1114,65 @@ function restartGame() {
     startGame();
 }
 
+// Shared actions - called by both keyboard handlers and touch controls
+
+function doJump() {
+    if (!isFalling && !isPlummeting && !isFlying) {
+        isFalling = true;
+        gameCharWorldY -= jumpStrength;
+        jumpSound.play();
+    }
+}
+
+function startFlying() {
+    if (!isPlummeting && !isFlying) {
+        isFlying = true;
+        wingFlap = random(0, 100); // Randomize flap start
+        if (flyingSound && flyingSound.isLoaded() && !flyingSound.isPlaying()) {
+            flyingSound.loop();
+        }
+    }
+}
+
+function stopFlying() {
+    isFlying = false;
+    if (flyingSound && flyingSound.isPlaying()) {
+        flyingSound.stop();
+    }
+}
+
+function startSpeedBoost() {
+    charSpeed = 15; // Speed boost!
+}
+
+function stopSpeedBoost() {
+    charSpeed = 10; // Normal speed
+}
+
+function doRestart() {
+    lives = 3;
+    isGameOver = false;
+    levelComplete = false;
+    restartGame();
+}
+
 // Handle key presses
 function keyPressed() {
     if ((isGameOver || levelComplete) && (key == 'r' || key == 'R')) {
-        lives = 3;
-        isGameOver = false;
-        levelComplete = false;
-        restartGame();
+        doRestart();
         return;
     }
-    
+
     if (isGameOver || levelComplete || isPlummeting) return;
 
     if (keyCode === LEFT_ARROW) isLeft = true;
     else if (keyCode === RIGHT_ARROW) isRight = true;
     else if (keyCode === UP_ARROW || key === 'w' || key === 'W' || keyCode === 32) {
-        if (!isFalling && !isPlummeting && !isFlying) {
-            isFalling = true;
-            gameCharWorldY -= jumpStrength;
-            jumpSound.play();
-        }
+        doJump();
     } else if (key === 's' || key === 'S') {
-        charSpeed = 15; // Speed boost!
+        startSpeedBoost();
     } else if (key === 'f' || key === 'F') {
-        // Start flying if not plummeting or already flying
-        if (!isPlummeting && !isFlying) {
-            isFlying = true;
-            wingFlap = random(0, 100); // Randomize flap start
-            if (flyingSound && flyingSound.isLoaded() && !flyingSound.isPlaying()) {
-                flyingSound.loop();
-            }
-        }
+        startFlying();
     }
 }
 
@@ -1155,13 +1183,9 @@ function keyReleased() {
     if (keyCode === LEFT_ARROW) isLeft = false;
     else if (keyCode === RIGHT_ARROW) isRight = false;
     else if (key === 's' || key === 'S') {
-        charSpeed = 10; // Normal speed
+        stopSpeedBoost();
     } else if (key === 'f' || key === 'F') {
-        // Stop flying when F released
-        isFlying = false;
-        if (flyingSound && flyingSound.isPlaying()) {
-            flyingSound.stop();
-        }
+        stopFlying();
     }
 }
 
