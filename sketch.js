@@ -68,6 +68,7 @@ function setup() {
     floorPosY = height * 3 / 4;
     lives = 3; // Three tries, be careful!
     startGame();
+    setupTouchControls();
 }
 
 function startGame() {
@@ -257,6 +258,11 @@ function checkPlayerDie() {
 
 // Main drawing loop
 function draw() {
+    var touchRestartEl = document.getElementById('touch-restart');
+    if (touchRestartEl) {
+        touchRestartEl.style.display = (isGameOver || levelComplete) ? 'block' : 'none';
+    }
+
     if (isGameOver) {
         displayGameOver();
         return;
@@ -1154,6 +1160,30 @@ function doRestart() {
     isGameOver = false;
     levelComplete = false;
     restartGame();
+}
+
+function setupTouchControls() {
+    var isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+    if (!isTouchDevice) return;
+
+    document.getElementById('touch-controls').classList.add('active');
+
+    function bindHold(id, onStart, onEnd) {
+        var el = document.getElementById(id);
+        el.addEventListener('touchstart', function(e) { e.preventDefault(); onStart(); }, { passive: false });
+        el.addEventListener('touchend', function(e) { e.preventDefault(); onEnd(); }, { passive: false });
+    }
+
+    bindHold('btn-left', function() { isLeft = true; }, function() { isLeft = false; });
+    bindHold('btn-right', function() { isRight = true; }, function() { isRight = false; });
+    bindHold('btn-jump', doJump, function() {});
+    bindHold('btn-fly', startFlying, stopFlying);
+    bindHold('btn-speed', startSpeedBoost, stopSpeedBoost);
+
+    document.getElementById('touch-restart').addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        doRestart();
+    }, { passive: false });
 }
 
 // Handle key presses
